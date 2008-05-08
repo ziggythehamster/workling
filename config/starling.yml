@@ -2,9 +2,12 @@
 #
 production:
   listens_on: localhost:15151
+  namespace:  myapp_production
 
 development:
   listens_on: localhost:22122
+  namespace:  myapp_development  
   
 test:
   listens_on: localhost:12345
+  namespace:  myapp_test 

@@ -9,9 +9,9 @@ module Workling
       end
       
       def self.read_config
-        config = YAML.load( IO.read(::RAILS_ROOT + "/config/starling.yml") )
-        self.starling_url = config[::RAILS_ENV]["listens_on"]
-        self.connection = ::MemCache.new self.starling_url
+        memcache_options = YAML.load( IO.read(::RAILS_ROOT + "/config/starling.yml") )[::RAILS_ENV].symbolize_keys
+        self.starling_url = memcache_options.delete(:listens_on)
+        self.connection = ::MemCache.new(self.starling_url, memcache_options)
       end
       
       def method_missing(method, *args)
