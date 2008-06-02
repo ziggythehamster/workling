@@ -1,3 +1,6 @@
+Version 0.2.4, 03.06.08
+- accept both async_ and asynch_ as prefixes for workling method invocation. thank you francois beausoleil! 
+
 Version 0.2.2, 15.02.08, rev 31
 - added blaine cook's suggestion: worklings can now (also) be invoked like this: YourWorkling.asynch_your_method(options)
 - added similar for remote store, which can now be called like this: Workling::Return::Store.set(:key, "value")
