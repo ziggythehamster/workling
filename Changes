@@ -1,5 +1,6 @@
 Version 0.2.4, 03.06.08
-- accept both async_ and asynch_ as prefixes for workling method invocation. thank you francois beausoleil! 
+- accept both async_ and asynch_ as prefixes for workling method invocation. thank you francois beausoleil!
+- added memcached configuration options to starling.yml. see example yml for details. thank you larry diehl!
 
 Version 0.2.2, 15.02.08, rev 31
 - added blaine cook's suggestion: worklings can now (also) be invoked like this: YourWorkling.asynch_your_method(options)

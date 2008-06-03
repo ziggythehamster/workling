@@ -25,7 +25,7 @@ require "workling/return/store/memory_return_store"
 require "workling/return/store/starling_return_store"
 
 RAILS_ROOT = File.dirname(__FILE__) + "/.." # fake the rails root directory.
-RAILS_ENV = "development"
+RAILS_ENV = "test"
 RAILS_DEFAULT_LOGGER = Logger.new
 
 # worklings are in here.
