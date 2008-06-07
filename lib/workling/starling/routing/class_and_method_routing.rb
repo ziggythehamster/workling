@@ -17,6 +17,11 @@ module Workling
           "#{ clazz.to_s.tableize }/#{ method }".split("/").join("__") # Don't split with : because it messes up memcache stats
         end
         
+        # NOTE dave dupre, 07.06.08
+        # Updated the way ClassAndMethodRouting builds the routing hash. I needed a routing hash per worker. 
+        # Note, whatever you do don’t ever try to call routing.build from inside another thread. 
+        # Really strange things happen that were very difficult to track down.
+        #
         # Call this for each worker class to set it up and determine all the queues
         def build(clazz)
 

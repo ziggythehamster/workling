@@ -64,17 +64,13 @@ module Workling
 
             # Dispatch and process the messages
             n = dispatch!(connection, clazz, clazz_routing)
-            if n > 0
-              Thread.pass                   # Give someone else a chance
-            else
-              sleep(self.class.sleep_time)  # Sleep since there was nothing processed
-            end
+            sleep(self.class.sleep_time) unless n > 0
             
-          # If there is a memcache error, hang for a bit to give it a chance to fire up again
-          # and reset the connection.
-          rescue MemCache::MemCacheError
-            sleep(self.class.reset_time)
-            connection = Workling::Starling::Client.new
+            # If there is a memcache error, hang for a bit to give it a chance to fire up again
+            # and reset the connection.
+            rescue MemCache::MemCacheError
+              sleep(self.class.reset_time)
+              connection.reset
           end
         end
       end
@@ -104,7 +100,6 @@ module Workling
         
         return n
       end
-      
     end
   end
 end
