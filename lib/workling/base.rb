@@ -5,6 +5,12 @@ module Workling
     def self.inherited(subclass)
       Workling::Discovery.discovered << subclass
     end
+    
+    def initialize
+      super
+      
+      create
+    end
 
     def create
       # Put worker initialize code in here. This is good for restarting jobs that

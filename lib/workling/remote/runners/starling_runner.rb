@@ -15,12 +15,11 @@ module Workling
         def run(clazz, method, options = {})
           StarlingRunner.client.set(@@routing.queue_for(clazz, method), options)
           
+          return nil # empty.
+          
           rescue MemCache::MemCacheError => e
             # failed to enqueue, raise a workling error so that it propagates upwards
             raise Workling::WorklingError.new("#{e.class.to_s} - #{e.message}")
-          end
-                   
-          return nil # empty.
         end
       end
     end

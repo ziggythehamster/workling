@@ -26,8 +26,7 @@ module Workling
         # Create a thread for each worker.
         Workling::Discovery.discovered.each do |clazz|
           logger.debug("Discovered listener #{clazz}")
-          clazz_routing = @routing.build(clazz)
-          @workers.add(Thread.new(clazz, clazz_routing) { |c, r| clazz_listen(c, r) })
+          @workers.add(Thread.new(clazz) { |c| clazz_listen(c) })
         end
         
         # Wait for all workers to complete
@@ -47,7 +46,7 @@ module Workling
       ##
       
       # Listen for one worker class
-      def clazz_listen(clazz, clazz_routing)
+      def clazz_listen(clazz)
         
         logger.debug("Listener thread #{clazz.name} started")
            
@@ -78,7 +77,7 @@ module Workling
             end
 
             # Dispatch and process the messages
-            n = dispatch!(connection, clazz, clazz_routing)
+            n = dispatch!(connection, clazz)
             logger.debug("Listener thread #{clazz.name} processed #{n.to_s} queue items") if n > 0
             sleep(self.class.sleep_time) unless n > 0
             
@@ -96,15 +95,15 @@ module Workling
       
       # Dispatcher for one worker class. Will throw MemCacheError if unable to connect.
       # Returns the number of worker methods called
-      def dispatch!(connection, clazz, clazz_routing)
+      def dispatch!(connection, clazz)
         n = 0
-        for queue in clazz_routing.keys
+        for queue in @routing.queues_names_routing_class(clazz)
           begin
             result = connection.get(queue)
             if result
               n += 1
-              handler = clazz_routing[queue]
-              method_name = clazz_routing.method_name(queue)
+              handler = @routing[queue]
+              method_name = @routing.method_name(queue)
               logger.debug("Calling #{handler.class.to_s}\##{method_name}(#{result.inspect})")
               handler.send(method_name, result)
             end
@@ -112,7 +111,7 @@ module Workling
             logger.error("FAILED to connect with queue #{ queue }: #{ e } }")
             raise e
           rescue Object => e
-            logger.error("FAILED to process queue #{ queue }. #{ clazz_routing[queue] } could not handle invocation of #{ clazz_routing.method_name(queue) } with #{ result.inspect }: #{ e }.\n#{ e.backtrace.join("\n") }")
+            logger.error("FAILED to process queue #{ queue }. #{ @routing[queue] } could not handle invocation of #{ @routing.method_name(queue) } with #{ result.inspect }: #{ e }.\n#{ e.backtrace.join("\n") }")
           end
         end
         
