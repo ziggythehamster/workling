@@ -3,17 +3,17 @@ module Workling
     
     class Poller
       
-      cattr_accessor :sleep_time
-      cattr_accessor :reset_time
-      
-      @@sleep_time = 2        # Seconds to sleep before looping
-      @@reset_time = 30       # Seconds to wait while resetting connection
-    
+      cattr_accessor :sleep_time # Seconds to sleep before looping
+      cattr_accessor :reset_time # Seconds to wait while resetting connection
+
       def initialize(routing)
+        Poller.sleep_time = Workling::Starling.config[:sleep_time] || 2
+        Poller.reset_time = Workling::Starling.config[:reset_time] || 30
+          
         @routing = routing
         @workers = ThreadGroup.new
-      end
-
+      end      
+      
       def logger
         Workling::Base.logger
       end
@@ -25,15 +25,15 @@ module Workling
 
         # Create a thread for each worker.
         Workling::Discovery.discovered.each do |clazz|
+          logger.debug("Discovered listener #{clazz}")
           clazz_routing = @routing.build(clazz)
           @workers.add(Thread.new(clazz, clazz_routing) { |c, r| clazz_listen(c, r) })
         end
         
-        # Wait for all to complete
+        # Wait for all workers to complete
         @workers.list.each { |t| t.join }
 
-        # Clean up all the connections. Don't need to do this since we are exiting anyway, but it doesn't
-        # hurt to get in the habit.
+        # Clean up all the connections.
         ActiveRecord::Base.verify_active_connections!
       end
       
@@ -42,19 +42,34 @@ module Workling
         @workers.list.each { |w| w[:shutdown] = true }
       end
       
-      # Thread procs below --------------------------------------------------
+      ##
+      ## Thread procs
+      ##
       
       # Listen for one worker class
       def clazz_listen(clazz, clazz_routing)
+        
+        logger.debug("Listener thread #{clazz.name} started")
+           
+        # Read thread configuration if available
+        if Starling.config.has_key?(:listeners)
+          if Starling.config[:listeners].has_key?(clazz.to_s)
+            config = Starling.config[:listeners][clazz.to_s].symbolize_keys
+            thread_sleep_time = config[:sleep_time] if config.has_key?(:sleep_time)
+          end
+        end
 
-        # Setup my connection - each thread gets its own connection to starling
+        hread_sleep_time ||= self.class.sleep_time
+                
+        # Setup connection to starling (one per thread)
         connection = Workling::Starling::Client.new
+        puts "** Starting Workling::Starling::Client for #{clazz.name} queue"
         
         # Start dispatching those messages
         while (!Thread.current[:shutdown]) do
           begin
             
-            # If you don't do anything for a while, mysql will drop you. Make sure it stays around.
+            # Keep MySQL connection alive
             unless ActiveRecord::Base.connection.active?
               unless ActiveRecord::Base.connection.reconnect!
                 logger.fatal("FAILED - Database not available")
@@ -64,15 +79,19 @@ module Workling
 
             # Dispatch and process the messages
             n = dispatch!(connection, clazz, clazz_routing)
+            logger.debug("Listener thread #{clazz.name} processed #{n.to_s} queue items") if n > 0
             sleep(self.class.sleep_time) unless n > 0
             
             # If there is a memcache error, hang for a bit to give it a chance to fire up again
             # and reset the connection.
             rescue MemCache::MemCacheError
+              logger.warn("Listener thread #{clazz.name} failed to connect to memcache. Resetting connection.")
               sleep(self.class.reset_time)
               connection.reset
           end
         end
+        
+        logger.debug("Listener thread #{clazz.name} ended")
       end
       
       # Dispatcher for one worker class. Will throw MemCacheError if unable to connect.
@@ -83,11 +102,10 @@ module Workling
           begin
             result = connection.get(queue)
             if result
-              # We got a result from the queue - dispatch it
               n += 1
               handler = clazz_routing[queue]
               method_name = clazz_routing.method_name(queue)
-              logger.debug("\n*****************\nCalling #{handler.class.to_s}\##{method_name}(#{result.inspect})\n*****************\n")
+              logger.debug("Calling #{handler.class.to_s}\##{method_name}(#{result.inspect})")
               handler.send(method_name, result)
             end
           rescue MemCache::MemCacheError => e
