@@ -1,3 +1,5 @@
+require 'workling/starling'
+
 module Workling
   module Starling
     class Client
