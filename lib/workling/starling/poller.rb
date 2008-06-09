@@ -99,7 +99,7 @@ module Workling
       # Returns the number of worker methods called
       def dispatch!(connection, clazz)
         n = 0
-        for queue in @routing.queues_names_routing_class(clazz)
+        for queue in @routing.queue_names_routing_class(clazz)
           begin
             result = connection.get(queue)
             if result
