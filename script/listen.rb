@@ -10,15 +10,15 @@ puts '** Use CTRL-C to stop.'
 
 ActiveRecord::Base.logger = Workling::Base.logger
 ActionController::Base.logger = Workling::Base.logger
-RAILS_DEFAULT_LOGGER = Workling::Base.logger
 
-client = Workling::Starling::Poller.new(Workling::Starling::Routing::ClassAndMethodRouting.new)
+poller = Workling::Starling::Poller.new(Workling::Starling::Routing::ClassAndMethodRouting.new)
 
 trap(:INT) { exit }
 
 begin
-  client.listen
+  poller.listen
 ensure
+  puts '** No Worklings found.' if Workling::Discovery.discovered.blank?
   puts '** Exiting'
 end
 

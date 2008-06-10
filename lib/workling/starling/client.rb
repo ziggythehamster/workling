@@ -8,7 +8,8 @@ module Workling
       
       def initialize
         @starling_url = Workling::Starling.config[:listens_on]
-        @connection = ::MemCache.new(self.starling_url, Workling::Starling.config[:memcache_options])
+        options = [self.starling_url, Workling::Starling.config[:memcache_options]].compact
+        @connection = ::MemCache.new(*options)
       end
       
       def method_missing(method, *args)

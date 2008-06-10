@@ -21,7 +21,7 @@ module Workling
       end
     
       def listen
-
+                
         # Allow concurrency for our tasks
         ActiveRecord::Base.allow_concurrency = true
 
