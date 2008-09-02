@@ -4,7 +4,7 @@ require 'digest/md5'
 module Workling
   module Remote
     mattr_accessor :dispatcher
-    @@dispatcher = Workling::Remote::Runners::NotRemoteRunner.new
+    @@dispatcher = Workling.default_runner
     
     def self.generate_uid(clazz, method)
       uid = ::Digest::MD5.hexdigest("#{ clazz }:#{ method }:#{ rand(1 << 64) }:#{ Time.now }")

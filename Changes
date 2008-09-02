@@ -1,3 +1,6 @@
+Version 0.2.5, 02.09.08
+- added automatic setting of spawn runner if the spawn plugin is installed. 
+
 Version 0.2.4, 08.06.08
 - accept both async_ and asynch_ as prefixes for workling method invocation. thank you francois beausoleil!
 - added memcached configuration options to starling.yml. see example yml for details. thank you larry diehl!
