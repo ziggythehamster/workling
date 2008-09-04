@@ -21,6 +21,7 @@ require "workling/remote"
 require "workling/remote/runners/not_remote_runner"
 require "workling/remote/runners/spawn_runner"
 require "workling/remote/runners/starling_runner"
+require "workling/remote/runners/backgroundjob_runner"
 require "workling/return/store/memory_return_store"
 require "workling/return/store/starling_return_store"
 

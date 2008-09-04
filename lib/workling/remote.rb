@@ -1,4 +1,8 @@
-require 'workling/remote/runners/not_remote_runner'
+require "workling/remote/runners/not_remote_runner"
+require "workling/remote/runners/spawn_runner"
+require "workling/remote/runners/starling_runner"
+require "workling/remote/runners/backgroundjob_runner"
+
 require 'digest/md5'
 
 module Workling
