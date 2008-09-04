@@ -9,6 +9,8 @@ module Workling
   def self.default_runner
     if Object.const_defined? "Spawn" # the spawn plugin is installed. 
       Workling::Remote::Runners::SpawnRunner.new
+    elsif Object.const_defined? "Bj" # the backgroundjob plugin is installed. 
+      Workling::Remote::Runners::BackgroundjobRunner.new
     else
       Workling::Remote::Runners::NotRemoteRunner.new
     end
