@@ -9,8 +9,8 @@ module Workling
         include ::Spawn
         
         def run(clazz, method, options = {})
-          spawn(SpawnRunner.options) do
-            worker_instance(clazz).send(method, options)
+          spawn(SpawnRunner.options) do # exceptions are trapped in here. 
+            dispatch!(clazz, method, options)
           end
           
           return nil # that means nothing!
