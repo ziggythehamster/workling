@@ -46,6 +46,8 @@ module Workling
 
   # is starling installed?  
   def self.starling_installed?
+    require 'starling' rescue nil
+      
     Object.const_defined? "Starling"
   end
 
