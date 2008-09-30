@@ -26,6 +26,7 @@ This is pretty easy. Just put cow_worker.rb into into app/workers, and subclass 
 class CowWorker < Workling::Base
   def moo(options)
     cow = Cow.find(options[:id])
+    logger.info("about to moo.")
     cow.moo
   end
 end
@@ -68,7 +69,9 @@ Workling does log all exceptions that propagate out of the worker methods.
 Logging with Workling
 ---------------------
 
+All workers have a logger method which returns the default logger, so you can log like this: 
 
+logger.info("about to moo.")
 
 What should I know about the Spawn Runner?
 ------------------------------------------
@@ -93,27 +96,71 @@ As of 27. September 2008, the recommended Starling setup is as follows:
 
 gem sources -a http://gems.github.com/ 
 sudo gem install starling-starling 
-sudo gem install fiveruns-memcache-client 
 mkdir /var/spool/starling 
 
-The robot Co-Op Memcached Gem version 1.5.0 has several bugs, which have been fixed in the fiveruns-memcache-client gem. Refer to the fiveruns README to see what the exact fixes are. 
+The robot Co-Op Memcached Gem version 1.5.0 has several bugs, which have been fixed in the fiveruns-memcache-client gem. The starling-starling gem will install this as a dependency. Refer to the fiveruns README to see what the exact fixes are. 
 
 The Rubyforge Starling gem is also out of date. Currently, the most authorative Project is starling-starling on github (27. September 2008). 
 
+Workling will now automatically detect and use Starling, unless you have also installed Spawn. If you have Spawn installed, you need to tell Workling to use Starling by putting this in your environment.rb: 
+
+Workling::Remote.dispatcher = Workling::Remote::Runners::StarlingRunner.new
+
 # Starting up the required processes
 
-Here's what you need to get up and started:
+Here's what you need to get up and started in development mode. 
 
-sudo starling -d 
+sudo starling -d -p 22122
 script/workling_starling_client start
 
 # Configuring starling.yml
 
+Workling copies a file called starling.yml into your applications config directory. You can delete this file if you're not planning to use Starling. The config file tells Workling on which port Starling is listening. 
+
+Notice that the default production port is 15151. This means you'll need to start Starling with -p 15151 on production. 
+
+You can also use this config file to pass configuration options to the memcache client which workling uses to connect to starling:
+
+development:
+  listens_on: localhost:22122
+  memcache_options:
+    <memcachesetting>: <value>
+
 # Monitoring Starling
+
+Starling comes with it's own script, starling_top. If you want statistics specific to workling, run:
+
+script/starling_status.rb
+
+A Quick Starling Primer
+-----------------------
+
+You might wonder what exactly starling does. Here's a little snippet you can play with to illustrate how it works: 
+
+ 4 # Put messages onto a queue:
+ 5 require 'memcache'
+ 6 starling = MemCache.new('localhost:22122')
+ 7 starling.set('my_queue', 1)
+ 8 
+ 9 # Get messages from the queue:
+10 require 'memcache'
+11 starling = MemCache.new('localhost:22122')
+12 loop { puts starling.get('my_queue') }
+13
 
 Using BackgroundJob
 -------------------
 
+If you don't want to bother with seperate processes, are not worried about latence or memory footprint, then you might want to use Bj to power workling. 
+
+Install the Bj plugin like this:
+
+1 ./script/plugin install http://codeforpeople.rubyforge.org/svn/rails/plugins/bj
+2 ./script/bj setup
+
+Workling will now automatically detect and use Bj, unless you have also installed Starling. If you have Starling installed, you need to tell Workling to use Bj by putting this in your environment.rb: 
+
+Workling::Remote.dispatcher = Workling::Remote::Runners::BackgroundjobRunner.new
 
 Progress indicators and return stores
 -------------------------------------
