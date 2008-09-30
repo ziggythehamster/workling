@@ -14,11 +14,11 @@ module Workling
   #   Workling::Remote.dispatcher = Workling::Remote::Runners::StarlingRunner.new
   #
   def self.default_runner
-    if Object.const_defined? "Starling"
+    if starling_installed?
       Workling::Remote::Runners::StarlingRunner.new
-    elsif Object.const_defined? "Spawn" # the spawn plugin is installed. 
+    elsif spawn_installed?
       Workling::Remote::Runners::SpawnRunner.new
-    elsif Object.const_defined? "Bj" # the backgroundjob plugin is installed. 
+    elsif bj_installed?
       Workling::Remote::Runners::BackgroundjobRunner.new
     else
       Workling::Remote::Runners::NotRemoteRunner.new
@@ -37,6 +37,21 @@ module Workling
     end
     raise_not_found(clazz, method) if method && !inst.respond_to?(method)
     inst
+  end
+
+  # is spawn installed?
+  def self.spawn_installed?
+    Object.const_defined? "Spawn"
+  end
+
+  # is starling installed?  
+  def self.starling_installed?
+    Object.const_defined? "Starling"
+  end
+
+  # is bj installed?
+  def self.bj_installed?
+    Object.const_defined? "Bj"
   end
   
   private

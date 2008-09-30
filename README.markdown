@@ -50,7 +50,7 @@ Notice the asynch_moo call to CowWorker. This will call the moo method on the Co
 
 All worker classes must inherit from this class, and be saved in app/workers. The Worker is loaded once, at which point the instance method 'create' is called. 
 
-Calling async_my_method on the worker class will trigger background work. This means that the loaded Worker instance will receive a call to the method my_method(:uid => "thisjobsuid2348732947923"). 
+Calling `async_my_method` on the worker class will trigger background work. This means that the loaded Worker instance will receive a call to the method `my_method(:uid => "thisjobsuid2348732947923")`. 
 
 ## Exception handling in Workers
 
