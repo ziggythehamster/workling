@@ -10,6 +10,12 @@ module Workling
         @starling_url = Workling::Starling.config[:listens_on]
         options = [self.starling_url, Workling::Starling.config[:memcache_options]].compact
         @connection = ::MemCache.new(*options)
+        
+        begin # make sure we can actually connect to starling on the given port
+          @connection.stats
+        rescue
+          raise Workling::StarlingNotFoundError.new
+        end
       end
       
       def method_missing(method, *args)

@@ -1,6 +1,11 @@
 module Workling
   class WorklingError < StandardError; end
   class WorklingNotFoundError < WorklingError; end
+  class StarlingNotFoundError < WorklingError
+    def initialize
+      super "config/starling.yml configured to connect to starling on #{ Workling::Starling.config[:listens_on] } for this environment. could not connect to starling on this host:port. pass starling the port with -p flag when starting it. "
+    end
+  end
 
   mattr_accessor :load_path
   @@load_path = File.expand_path(File.join(File.dirname(__FILE__), '../../../../app/workers')) 

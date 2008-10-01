@@ -60,7 +60,7 @@ Workling does log all exceptions that propagate out of the worker methods.
 
 ## Logging with Workling
 
-All workers have a logger method which returns the default logger, so you can log like this: 
+RAILS_DEFAULT_LOGGER is available in all workers. Workers also have a logger method which returns the default logger, so you can log like this: 
 
     logger.info("about to moo.")
 
@@ -97,7 +97,7 @@ Workling will now automatically detect and use Starling, unless you have also in
 
 ## Starting up the required processes
 
-Here's what you need to get up and started in development mode. 
+Here's what you need to get up and started in development mode. Look in config/starling.yml to see what the default ports are for other environments. 
 
     sudo starling -d -p 22122
     script/workling_starling_client start
@@ -161,7 +161,7 @@ Here is an example workling that crawls an addressbook and puts results in a ret
     class NetworkWorker < Workling::Base
       def search(options)
         results = Blackbook.get(options[:key], options[:username], options[:password])
-        Workling::Return.set(options[:uid], results)
+        Workling::Return::Store.set(options[:uid], results)
       end
     end
 
@@ -171,7 +171,7 @@ call your workling as above:
 
 you can now use the @uid to query the return store:   
 
-    results = Workling::Return.get(@uid)
+    results = Workling::Return::Store.get(@uid)
 
 of course, you can use this for progress indicators. just put the progress into the return store. 
 
