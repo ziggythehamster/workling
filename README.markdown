@@ -8,7 +8,7 @@ You can configure how the background code will be run. Currently, workling suppo
 
 The easiest way of getting started with workling is like this: 
 
-    script/plugin install git@github.com:purzelrakete/workling.git
+    script/plugin install git://github.com/purzelrakete/workling.git
     script/plugin install git://github.com/tra/spawn.git 
 
 If you're on an older Rails version, there's also a subversion mirror wor workling (I'll do my best to keep it synched) at:
@@ -154,14 +154,19 @@ Workling will now automatically detect and use Bj, unless you have also installe
 Your worklings can write back to a return store. This allows you to write progress indicators, or access results from your workling. As above, this is fairly slim. Again, you can swap in any return store implementation you like without changing your code. They all behave like memcached. For tests, there is a memory return store, for production use there is currently a starling return store. You can easily add a new return store (over the database for instance) by subclassing Workling::Return::Store::Base. Configure it like this in your test environment:
 
     Workling::Return::Store.instance = Workling::Return::Store::MemoryReturnStore.new
+    
+Setting and getting values works as follows. Read the next paragraph to see where the job-id comes from. 
 
-Here is an example workling that crawls an addressbook and puts results in a return store. Worling makes sure you have options[:uid] in your hash - pass this into the return store with your results. 
+    Workling.return.set("job-id-1", "moo")
+    Workling.return.get("job-id-1")           => "moo"
+
+Here is an example worker that crawls an addressbook and puts results into a return store. Workling makes sure you have a :uid in your argument hash - set the value into the return store using this uid as a key:
 
     require 'blackbook'
     class NetworkWorker < Workling::Base
       def search(options)
         results = Blackbook.get(options[:key], options[:username], options[:password])
-        Workling::Return::Store.set(options[:uid], results)
+        Workling.return.set(options[:uid], results)
       end
     end
 
@@ -171,7 +176,7 @@ call your workling as above:
 
 you can now use the @uid to query the return store:   
 
-    results = Workling::Return::Store.get(@uid)
+    results = Workling.return.get(@uid)
 
 of course, you can use this for progress indicators. just put the progress into the return store. 
 

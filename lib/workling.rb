@@ -6,7 +6,7 @@ module Workling
       super "config/starling.yml configured to connect to starling on #{ Workling::Starling.config[:listens_on] } for this environment. could not connect to starling on this host:port. pass starling the port with -p flag when starting it. "
     end
   end
-
+  
   mattr_accessor :load_path
   @@load_path = File.expand_path(File.join(File.dirname(__FILE__), '../../../../app/workers')) 
   
@@ -44,6 +44,11 @@ module Workling
     end
     raise_not_found(clazz, method) if method && !inst.respond_to?(method)
     inst
+  end
+  
+  # returns Workling::Return::Store.instance. 
+  def self.return
+    Workling::Return::Store.instance
   end
 
   # is spawn installed?
