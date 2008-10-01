@@ -58,7 +58,10 @@ module Workling
 
   # is starling installed?  
   def self.starling_installed?
-    require 'starling' rescue nil
+    begin
+      require 'starling' 
+    rescue LoadError
+    end
       
     Object.const_defined? "Starling"
   end
@@ -66,6 +69,22 @@ module Workling
   # is bj installed?
   def self.bj_installed?
     Object.const_defined? "Bj"
+  end
+  
+  # tries to load fiveruns-memcache-client. if this isn't found, 
+  # memcache-client is searched for. if that isn't found, don't do anything. 
+  def self.try_load_a_memcache_client
+    begin
+      gem 'fiveruns-memcache-client'
+      require 'memcache'
+    rescue Gem::LoadError
+      begin
+        gem 'memcache-client'
+        require 'memcache'
+      rescue Gem::LoadError
+        Workling::Base.logger.info "WORKLING: couldn't find a memcache client - you need one for the starling runner. "
+      end
+    end
   end
   
   private

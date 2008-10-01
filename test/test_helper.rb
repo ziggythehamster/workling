@@ -7,13 +7,7 @@ require 'active_support'
 require 'test/spec'
 require 'mocha'
 
-begin
-  gem 'fiveruns-memcache-client'
-rescue
-  gem 'memcache-client'
-end
-
-require 'memcache'
+Workling.try_load_a_memcache_client
 
 $:.unshift plugin_lib, plugin_test
 

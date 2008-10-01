@@ -1,9 +1,2 @@
-begin
-  gem 'fiveruns-memcache-client'
-rescue
-  gem 'memcache-client'
-end
-
-require 'memcache'
-
+Workling.try_load_a_memcache_client
 Workling::Discovery.discover!

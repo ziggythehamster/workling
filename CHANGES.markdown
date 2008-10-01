@@ -3,6 +3,7 @@ Version 0.3, 25.10.08
 - added automatic detection of starling, spawn and backgroundjob to set default runner
 - made logging of exceptions more consistent across runners. 
 - added friendlier error message if starling was started on the wrong port. 
+- play nice without fiveruns-memcache-client. 
 - added better documentation in README and RDOC
 
 Version 0.2.5, 02.09.08

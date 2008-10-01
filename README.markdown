@@ -17,7 +17,7 @@ If you're on an older Rails version, there's also a subversion mirror wor workli
 
 ## Writing and calling Workers
 
-This is pretty easy. Just put cow_worker.rb into into app/workers, and subclass Workling::Base:
+This is pretty easy. Just put `cow_worker.rb` into into `app/workers`, and subclass `Workling::Base`:
 
     # handle asynchronous mooing.
     class CowWorker < Workling::Base 
@@ -44,11 +44,11 @@ Next, you'll want to call your workling in a controller. Your controller might l
       end
     end
 
-Notice the asynch_moo call to CowWorker. This will call the moo method on the CowWorker in the background, passing any parameters you like on. In fact, workling will call whatever comes after asynch_ as a method on the worker instance. 
+Notice the `asynch_moo` call to `CowWorker`. This will call the `moo` method on the `CowWorker` in the background, passing any parameters you like on. In fact, workling will call whatever comes after asynch_ as a method on the worker instance. 
 
 ## Worker Lifecycle
 
-All worker classes must inherit from this class, and be saved in app/workers. The Worker is loaded once, at which point the instance method `create` is called. 
+All worker classes must inherit from this class, and be saved in `app/workers`. The Worker is loaded once, at which point the instance method `create` is called. 
 
 Calling `async_my_method` on the worker class will trigger background work. This means that the loaded Worker instance will receive a call to the method `my_method(:uid => "thisjobsuid2348732947923")`. 
 
@@ -60,7 +60,7 @@ Workling does log all exceptions that propagate out of the worker methods.
 
 ## Logging with Workling
 
-RAILS_DEFAULT_LOGGER is available in all workers. Workers also have a logger method which returns the default logger, so you can log like this: 
+`RAILS_DEFAULT_LOGGER` is available in all workers. Workers also have a logger method which returns the default logger, so you can log like this: 
 
     logger.info("about to moo.")
 
@@ -151,7 +151,7 @@ Workling will now automatically detect and use Bj, unless you have also installe
 
 # Progress indicators and return stores
 
-Your worklings can write back to a return store. This allows you to write progress indicators, or access results from your workling. As above, this is fairly slim. Again, you can swap in any return store implementation you like without changing your code. They all behave like memcached. For tests, there is a memory return store, for production use there is currently a starling return store. You can easily add a new return store (over the database for instance) by subclassing Workling::Return::Store::Base. Configure it like this in your test environment:
+Your worklings can write back to a return store. This allows you to write progress indicators, or access results from your workling. As above, this is fairly slim. Again, you can swap in any return store implementation you like without changing your code. They all behave like memcached. For tests, there is a memory return store, for production use there is currently a starling return store. You can easily add a new return store (over the database for instance) by subclassing `Workling::Return::Store::Base`. Configure it like this in your test environment:
 
     Workling::Return::Store.instance = Workling::Return::Store::MemoryReturnStore.new
     
