@@ -48,7 +48,7 @@ Notice the asynch_moo call to CowWorker. This will call the moo method on the Co
 
 ## Worker Lifecycle
 
-All worker classes must inherit from this class, and be saved in app/workers. The Worker is loaded once, at which point the instance method 'create' is called. 
+All worker classes must inherit from this class, and be saved in app/workers. The Worker is loaded once, at which point the instance method `create` is called. 
 
 Calling `async_my_method` on the worker class will trigger background work. This means that the loaded Worker instance will receive a call to the method `my_method(:uid => "thisjobsuid2348732947923")`. 
 
@@ -176,5 +176,17 @@ you can now use the @uid to query the return store:
 of course, you can use this for progress indicators. just put the progress into the return store. 
 
 enjoy!
+
+# Contributors
+
+The following people contributed code to workling so far. Many thanks :) If I forgot anybody, I aplogise. Just drop me a note and I'll add you to the project so that you can amend this!
+
+* Andrew Carter (ascarter)
+* Chris Gaffney (gaffneyc)
+* Matthew Rudy (matthewrudy)
+* Larry Diehl (reeze)
+* grantr (francios)
+* David (digitalronin)
+* Dave Dupré
 
 Copyright (c) 2008 play/type GmbH, released under the MIT license

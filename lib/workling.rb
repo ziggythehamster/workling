@@ -19,7 +19,9 @@ module Workling
   #   Workling::Remote.dispatcher = Workling::Remote::Runners::StarlingRunner.new
   #
   def self.default_runner
-    if starling_installed?
+    if RAILS_ENV == "test"
+      Workling::Remote::Runners::NotRemoteRunner.new
+    elsif starling_installed?
       Workling::Remote::Runners::StarlingRunner.new
     elsif spawn_installed?
       Workling::Remote::Runners::SpawnRunner.new

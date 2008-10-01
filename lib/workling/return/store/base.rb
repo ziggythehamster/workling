@@ -13,7 +13,7 @@ module Workling
       
       class Base
         def set(key, value)
-          raise NotImplementedError.new("put(key, value) not implemented in #{ self.class }")
+          raise NotImplementedError.new("set(key, value) not implemented in #{ self.class }")
         end
         
         def get(key)

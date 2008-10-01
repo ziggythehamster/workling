@@ -11,11 +11,7 @@ module Workling
         options = [self.starling_url, Workling::Starling.config[:memcache_options]].compact
         @connection = ::MemCache.new(*options)
         
-        begin # make sure we can actually connect to starling on the given port
-          @connection.stats
-        rescue
-          raise Workling::StarlingNotFoundError.new
-        end
+        raise_unless_connected!
       end
       
       def method_missing(method, *args)
@@ -25,6 +21,16 @@ module Workling
       def stats
         @connection.stats
       end
+      
+      private
+        # make sure we can actually connect to starling on the given port
+        def raise_unless_connected!
+          begin 
+            @connection.stats
+          rescue
+            raise Workling::StarlingNotFoundError.new
+          end
+        end
     end
   end
 end
