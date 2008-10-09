@@ -12,7 +12,7 @@ module Workling
     class Client
       
       # the url with which the memcache client expects to reach starling
-      attr_accessor :starling_url
+      attr_accessor :starling_urls
       
       # the memcache connection object
       attr_accessor :connection
@@ -26,8 +26,8 @@ module Workling
       #  to starling.
       #
       def initialize
-        @starling_url = Workling::Starling.config[:listens_on]
-        options = [self.starling_url, Workling::Starling.config[:memcache_options]].compact
+        @starling_urls = Workling::Starling.config[:listens_on].split(',')
+        options = [@starling_urls, Workling::Starling.config[:memcache_options]].compact
         @connection = ::MemCache.new(*options)
         
         raise_unless_connected!
