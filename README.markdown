@@ -203,5 +203,6 @@ Anybody who contributes fixes (with tests), or new functionality (whith tests) w
 * Dave Dupré
 * Douglas Shearer (dougal)
 * Nick Plante (zapnap)
+* Brent
 
 Copyright (c) 2008 play/type GmbH, released under the MIT license

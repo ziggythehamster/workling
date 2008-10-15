@@ -2,6 +2,8 @@ require 'workling/starling'
 
 #
 #  Polls Starling and dispatches jobs onto the correct workers.
+#  
+#  TODO: needs some urgent refactoring love. 
 # 
 module Workling
   module Starling
@@ -74,11 +76,23 @@ module Workling
         while (!Thread.current[:shutdown]) do
           begin
             
-            # Keep MySQL connection alive
-            unless ActiveRecord::Base.connection.active?
-              unless ActiveRecord::Base.connection.reconnect!
-                logger.fatal("FAILED - Database not available")
-                break
+            # Thanks for this Brent! 
+            #
+            #     ...Just a heads up, due to how rails’ MySQL adapter handles this  
+            #     call ‘ActiveRecord::Base.connection.active?’, you’ll need 
+            #     to wrap the code that checks for a connection in in a mutex.
+            #
+            #     ....I noticed this while working with a multi-core machine that 
+            #     was spawning multiple workling threads. Some of my workling 
+            #     threads would hit serious issues at this block of code without 
+            #     the mutex.            
+            #
+            Mutex.synchronize do 
+              unless ActiveRecord::Base.connection.active?  # Keep MySQL connection alive
+                unless ActiveRecord::Base.connection.reconnect!
+                  logger.fatal("Failed - Database not available!")
+                  break
+                end
               end
             end
 

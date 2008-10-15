@@ -1,2 +1,2 @@
+* refactor starling poller. extract strategies (threaded, clustered)
 * add an ampq runner
-* add a msg when initializing rails: what runner is being used?

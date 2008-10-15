@@ -12,7 +12,7 @@ module Workling
   
   mattr_accessor :load_path
   @@load_path = File.expand_path(File.join(File.dirname(__FILE__), '../../../../app/workers')) 
-  VERSION = "0.3"
+  VERSION = "0.3.1"
   
   #
   # determine the runner to use if nothing is specifically set. workling will try to detect
