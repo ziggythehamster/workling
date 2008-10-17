@@ -21,6 +21,7 @@ module Workling
           
         @routing = routing
         @workers = ThreadGroup.new
+        @mutex = Mutex.new
       end      
       
       # returns the Workling::Base.logger
@@ -40,22 +41,28 @@ module Workling
         # Wait for all workers to complete
         @workers.list.each { |t| t.join }
 
+        logger.debug("Reaped listener threads. ")
+        
         # Clean up all the connections.
         ActiveRecord::Base.verify_active_connections!
+        logger.debug("Cleaned up connection: out!")
       end
       
-      # gracefully stop processing
+      # Check if all Worker threads have been started. 
+      def started?
+        Workling::Discovery.discovered.size == @workers.list.size
+      end
+      
+      # Gracefully stop processing
       def stop
+        sleep 1 until started? # give it a chance to start up before shutting down. 
+        logger.info("Giving Listener Threads a chance to shut down. This may take a while... ")
         @workers.list.each { |w| w[:shutdown] = true }
+        logger.info("Listener threads were shut down.  ")
       end
-      
-      ##
-      ## Thread procs
-      ##
-      
+
       # Listen for one worker class
       def clazz_listen(clazz)
-        
         logger.debug("Listener thread #{clazz.name} started")
            
         # Read thread configuration if available
@@ -70,7 +77,7 @@ module Workling
                 
         # Setup connection to starling (one per thread)
         connection = Workling::Starling::Client.new
-        puts "** Starting Workling::Starling::Client for #{clazz.name} queue"
+        logger.info("** Starting Workling::Starling::Client for #{clazz.name} queue")
         
         # Start dispatching those messages
         while (!Thread.current[:shutdown]) do
@@ -87,7 +94,7 @@ module Workling
             #     threads would hit serious issues at this block of code without 
             #     the mutex.            
             #
-            Mutex.synchronize do 
+            @mutex.synchronize do 
               unless ActiveRecord::Base.connection.active?  # Keep MySQL connection alive
                 unless ActiveRecord::Base.connection.reconnect!
                   logger.fatal("Failed - Database not available!")

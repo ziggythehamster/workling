@@ -4,16 +4,21 @@ plugin_lib = File.join plugin_root, 'lib'
 
 require 'rubygems'
 require 'active_support'
+require 'active_record'
 require 'test/spec'
 require 'mocha'
 
 $:.unshift plugin_lib, plugin_test
 
 RAILS_ENV = "test"
+RAILS_ROOT = File.dirname(__FILE__) + "/.." # fake the rails root directory.
+RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
+RAILS_DEFAULT_LOGGER.level = Logger::ERROR
 
 require "mocks/spawn"
 require "mocks/logger"
 require "workling"
+require "workling/base"
 
 Workling.try_load_a_memcache_client
 
@@ -28,9 +33,6 @@ require "workling/remote/runners/backgroundjob_runner"
 require "workling/return/store/memory_return_store"
 require "workling/return/store/starling_return_store"
 require "mocks/client"
-
-RAILS_ROOT = File.dirname(__FILE__) + "/.." # fake the rails root directory.
-RAILS_DEFAULT_LOGGER = Logger.new
 
 # worklings are in here.
 Workling.load_path ="#{ plugin_root }/test/workers"

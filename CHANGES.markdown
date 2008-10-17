@@ -1,7 +1,8 @@
 Version 0.3.1, 15.10.08
 - fixed to autodiscovery code bugs. 
 - introduced Workling::VERSION
-- fixed AR reconnecting code for Multicore systems (Thanks Brent!)
+- fixed test suite for the case that no memcache client is installed at all
+- fixed AR reconnecting code for Multicore systems (Thanks Brent)
 
 Version 0.3, 25.09.08
 - added backgroundjob runner
