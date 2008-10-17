@@ -26,7 +26,7 @@ module Workling
       #  to starling.
       #
       def initialize
-        @starling_urls = Workling::Starling.config[:listens_on].split(',')
+        @starling_urls = Workling::Starling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
         options = [@starling_urls, Workling::Starling.config[:memcache_options]].compact
         @connection = ::MemCache.new(*options)
         

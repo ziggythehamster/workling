@@ -110,12 +110,24 @@ Notice that the default production port is 15151. This means you'll need to star
 
 You can also use this config file to pass configuration options to the memcache client which workling uses to connect to starling. use the key 'memcache_options' for this. 
 
+You can also set sleep time for each Worker. See the key 'listeners' for this. Put in the modularized Class name as a key. 
+
     development:
       listens_on: localhost:22122
       sleep_time: 2
       reset_time: 30
+      listeners:
+        Util:
+          sleep_time: 20
       memcache_options:
-        <memcachesetting>: <value>
+        namespace: myapp_development
+        
+    production:
+      listens_on: localhost:22122, localhost:221223, localhost:221224
+      sleep_time: 2
+      reset_time: 30
+      
+Note that you can cluster Starling instances by passing a comma separated list of values to 
         
 Sleep time determines the wait time between polls against polls. A single poll will do one .get on every queue (there is a corresponding queue for each worker method).
 
@@ -204,5 +216,6 @@ Anybody who contributes fixes (with tests), or new functionality (whith tests) w
 * Douglas Shearer (dougal)
 * Nick Plante (zapnap)
 * Brent
+* Evan Light (elight)
 
 Copyright (c) 2008 play/type GmbH, released under the MIT license
