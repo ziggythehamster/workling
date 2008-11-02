@@ -4,9 +4,17 @@
 module Workling
   class WorklingError < StandardError; end
   class WorklingNotFoundError < WorklingError; end
-  class StarlingNotFoundError < WorklingError
+  class QueueserverNotFoundError < WorklingError
     def initialize
-      super "config/starling.yml configured to connect to starling on #{ Workling.config[:listens_on] } for this environment. could not connect to starling on this host:port. pass starling the port with -p flag when starting it. If you don't want to use Starling at all, then explicitly set Workling::Remote.dispatcher (see README for an example)"
+      super "config/workling.yml configured to connect to queue server on #{ Workling.config[:listens_on] } for this environment. could not connect to queue server on this host:port. for starling users: pass starling the port with -p flag when starting it. If you don't want to use Starling, then explicitly set Workling::Remote.dispatcher (see README for an example)"
+    end
+  end
+
+  class ConfigurationError < WorklingError
+    def initialize
+      super File.exist?(File.join(RAILS_ROOT, 'config', 'starling.yml')) ? 
+        "config/starling.yml has been depracated. rename your config file to config/workling.yml then try again!" :
+        "config/workling.yml could not be loaded. check out README.markdown to see what this file should contain. "
     end
   end
   
@@ -98,11 +106,14 @@ module Workling
   
   #
   #  returns a config hash. reads RAILS_ROOT/config/workling.yml
-  #  NOTE: this used to be starling.yml. simply rename to upgrade.
   #
   def self.config
     config_path = File.join(RAILS_ROOT, 'config', 'workling.yml')
     @@config ||=  YAML.load_file(config_path)[RAILS_ENV || 'development'].symbolize_keys
+    
+    # make sure the config file could be read correctly. 
+    raise ConfigurationError.new unless @@config
+    
     @@config[:memcache_options].symbolize_keys! if @@config[:memcache_options]
     @@config 
   end

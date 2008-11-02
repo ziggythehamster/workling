@@ -1,6 +1,6 @@
 module Workling
   module Clients
-    class Starling
+    class MemcacheQueue
       def raise_unless_connected!; end
     end
   end

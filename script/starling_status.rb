@@ -11,7 +11,7 @@ puts '** Rails loaded.'
 trap(:INT) { exit }
 
 begin
-  client = Workling::Clients::Starling.new
+  client = Workling::Clients::MemcacheQueue.new
   client.reset
   
   client.stats # do this so that connection is shown as established below. 

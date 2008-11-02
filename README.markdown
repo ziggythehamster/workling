@@ -97,14 +97,14 @@ Workling will now automatically detect and use Starling, unless you have also in
 
 ## Starting up the required processes
 
-Here's what you need to get up and started in development mode. Look in config/starling.yml to see what the default ports are for other environments. 
+Here's what you need to get up and started in development mode. Look in config/workling.yml to see what the default ports are for other environments. 
 
     sudo starling -d -p 22122
     script/workling_starling_client start
 
-## Configuring starling.yml
+## Configuring workling.yml
 
-Workling copies a file called starling.yml into your applications config directory. You can delete this file if you're not planning to use Starling. The config file tells Workling on which port Starling is listening. 
+Workling copies a file called workling.yml into your applications config directory. You can delete this file if you're not planning to use Starling. The config file tells Workling on which port Starling is listening. 
 
 Notice that the default production port is 15151. This means you'll need to start Starling with -p 15151 on production. 
 

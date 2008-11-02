@@ -1,5 +1,7 @@
 #
-#  Wrapper for the starling connection. The connection is made using fiveruns-memcache-client, 
+#  This client can be used for all Queue Servers that speak Memcached, such as Starling. 
+#
+#  Wrapper for the memcache connection. The connection is made using fiveruns-memcache-client, 
 #  or memcache-client, if this is not available. See the README for a discussion of the memcache 
 #  clients. 
 #
@@ -7,25 +9,25 @@
 #
 module Workling
   module Clients
-    class Starling
+    class MemcacheQueue
       
       # the url with which the memcache client expects to reach starling
-      attr_accessor :starling_urls
+      attr_accessor :queueserver_urls
       
       # the memcache connection object
       attr_accessor :connection
       
       #
-      #  the client attempts to connect to starling using the configuration options found in 
+      #  the client attempts to connect to queueserver using the configuration options found in 
       #
-      #      Workling.config. this can be configured in config/starling.yml. 
+      #      Workling.config. this can be configured in config/workling.yml. 
       #
       #  the initialization code will raise an exception if memcache-client cannot connect 
-      #  to starling.
+      #  to queueserver.
       #
       def initialize
-        @starling_urls = Workling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
-        options = [@starling_urls, Workling.config[:memcache_options]].compact
+        @queueserver_urls = Workling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
+        options = [@queueserver_urls, Workling.config[:memcache_options]].compact
         @connection = ::MemCache.new(*options)
         
         raise_unless_connected!
@@ -37,12 +39,12 @@ module Workling
       end
       
       private
-        # make sure we can actually connect to starling on the given port
+        # make sure we can actually connect to queueserver on the given port
         def raise_unless_connected!
           begin 
             @connection.stats
           rescue
-            raise Workling::StarlingNotFoundError.new
+            raise Workling::QeueuserverNotFoundError.new
           end
         end
     end

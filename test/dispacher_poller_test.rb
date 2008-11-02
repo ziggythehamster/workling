@@ -22,7 +22,7 @@ context "the dispatcher poller" do
     
     client = mock()
     client.expects(:get).at_least_once.returns("hi")
-    Workling::Clients::Starling.expects(:new).at_least_once.returns(client)
+    Workling::Clients::MemcacheQueue.expects(:new).at_least_once.returns(client)
     
     # Don't take longer than 10 seconds to shut this down. 
     Timeout::timeout(10) do

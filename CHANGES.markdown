@@ -17,7 +17,7 @@ Version 0.2.5, 02.09.08
 
 Version 0.2.4, 08.06.08
 - accept both async_ and asynch_ as prefixes for workling method invocation. thank you francois beausoleil!
-- added memcached configuration options to starling.yml. see example yml for details. thank you larry diehl!
+- added memcached configuration options to workling.yml. see example yml for details. thank you larry diehl!
 - re-raise exceptions if there is a problem adding an item to the starling queue. thank you digitalronin!
 - added status script for starling client. thank you andrew carter!
 - applied patches from dave dupre: http://davedupre.com/2008/03/29/ruby-background-tasks-with-starling-part-2/
