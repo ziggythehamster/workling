@@ -38,7 +38,7 @@ Version 0.2, 13.02.08 rev. 21
 - progress bars or returning results now possible with return stores. use these to communicate back from your workling.
 - memory store for testing and starling store added. 
 - now generates uids for workling jobs. these are returned by the runner.
-- extracted Workling::Starling::Client
+- extracted Workling::Clients::Starling
 - clearer file structure for workling
 
 Version 0.1, 06.02.08

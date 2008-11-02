@@ -1,6 +1,6 @@
 module Workling
-  module Starling
-    class Client
+  module Clients
+    class Starling
       def raise_unless_connected!; end
     end
   end

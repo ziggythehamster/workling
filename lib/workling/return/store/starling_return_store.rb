@@ -1,5 +1,5 @@
 require 'workling/return/store/base'
-require 'workling/starling/client'
+require 'workling/clients/starling'
 
 #
 #  Recommended Return Store if you are using the Starling Runner. This
@@ -12,7 +12,7 @@ module Workling
         cattr_accessor :client
         
         def initialize
-          self.client = Workling::Starling::Client.new
+          self.client = Workling::Clients::Starling.new
         end
         
         # set a value in the queue 'key'. 

@@ -1,5 +1,3 @@
-require 'workling/starling'
-
 #
 #  Wrapper for the starling connection. The connection is made using fiveruns-memcache-client, 
 #  or memcache-client, if this is not available. See the README for a discussion of the memcache 
@@ -8,8 +6,8 @@ require 'workling/starling'
 #  method_missing delegates all messages through to the underlying memcache connection. 
 #
 module Workling
-  module Starling
-    class Client
+  module Clients
+    class Starling
       
       # the url with which the memcache client expects to reach starling
       attr_accessor :starling_urls
@@ -20,14 +18,14 @@ module Workling
       #
       #  the client attempts to connect to starling using the configuration options found in 
       #
-      #      Workling::Starling.config. this can be configured in config/starling.yml. 
+      #      Workling.config. this can be configured in config/starling.yml. 
       #
       #  the initialization code will raise an exception if memcache-client cannot connect 
       #  to starling.
       #
       def initialize
-        @starling_urls = Workling::Starling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
-        options = [@starling_urls, Workling::Starling.config[:memcache_options]].compact
+        @starling_urls = Workling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
+        options = [@starling_urls, Workling.config[:memcache_options]].compact
         @connection = ::MemCache.new(*options)
         
         raise_unless_connected!

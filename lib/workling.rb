@@ -6,7 +6,7 @@ module Workling
   class WorklingNotFoundError < WorklingError; end
   class StarlingNotFoundError < WorklingError
     def initialize
-      super "config/starling.yml configured to connect to starling on #{ Workling::Starling.config[:listens_on] } for this environment. could not connect to starling on this host:port. pass starling the port with -p flag when starting it. If you don't want to use Starling at all, then explicitly set Workling::Remote.dispatcher (see README for an example)"
+      super "config/starling.yml configured to connect to starling on #{ Workling.config[:listens_on] } for this environment. could not connect to starling on this host:port. pass starling the port with -p flag when starting it. If you don't want to use Starling at all, then explicitly set Workling::Remote.dispatcher (see README for an example)"
     end
   end
   
@@ -94,6 +94,17 @@ module Workling
         Workling::Base.logger.info "WORKLING: couldn't find a memcache client - you need one for the starling runner. "
       end
     end
+  end
+  
+  #
+  #  returns a config hash. reads RAILS_ROOT/config/workling.yml
+  #  NOTE: this used to be starling.yml. simply rename to upgrade.
+  #
+  def self.config
+    config_path = File.join(RAILS_ROOT, 'config', 'workling.yml')
+    @@config ||=  YAML.load_file(config_path)[RAILS_ENV || 'development'].symbolize_keys
+    @@config[:memcache_options].symbolize_keys! if @@config[:memcache_options]
+    @@config 
   end
   
   private

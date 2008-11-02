@@ -3,7 +3,7 @@ require 'fileutils'
 plugin_root = File.dirname(__FILE__)
 
 # config files
-for file in config = %w{ starling.yml } do
+for file in config = %w{ workling.yml } do
   FileUtils.cp(File.join(plugin_root, 'config', file), File.join(RAILS_ROOT, 'config'))
 end
 

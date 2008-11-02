@@ -20,8 +20,8 @@ module Workling
         cattr_accessor :client
         
         def initialize
-          StarlingRunner.client = Workling::Starling::Client.new
-          StarlingRunner.routing = Workling::Starling::Routing::ClassAndMethodRouting.new
+          StarlingRunner.client = Workling::Clients::Starling.new
+          StarlingRunner.routing = Workling::Routing::ClassAndMethodRouting.new
         end
         
         # enqueues the job onto Starling. 
