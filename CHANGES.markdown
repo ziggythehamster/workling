@@ -1,6 +1,8 @@
-Version 0.4.0
+Version 0.3.8
+- full support for rudeq
 - refactored pollers. now now longer mainly about starling
 - refactored starling client, converted to generalized memcachequeue client.
+- changed runner script to be more generic
 
 Version 0.3.1, 15.10.08
 - fixed to autodiscovery code bugs. 

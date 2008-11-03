@@ -168,6 +168,12 @@ Configure Workling to use RudeQ. Add this to your environment:
 
     Workling::Clients::MemcacheQueue.memcache_client_class = RudeQ::Client
     Workling::Remote.dispatcher = Workling::Remote::Runners::StarlingRunner.new
+    
+Now start the Workling Client: 
+
+    1 ./script/workling_client start
+    
+You're good.
 
 # Using BackgroundJob
 
