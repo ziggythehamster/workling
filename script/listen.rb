@@ -1,6 +1,7 @@
 puts '=> Loading Rails...'
 
 require File.dirname(__FILE__) + '/../../../../config/environment'
+require File.dirname(__FILE__) + '/../lib/workling/remote'
 require File.dirname(__FILE__) + '/../lib/workling/remote/invokers/poller'
 require File.dirname(__FILE__) + '/../lib/workling/routing/class_and_method_routing'
 
