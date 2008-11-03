@@ -100,7 +100,7 @@ Workling will now automatically detect and use Starling, unless you have also in
 Here's what you need to get up and started in development mode. Look in config/workling.yml to see what the default ports are for other environments. 
 
     sudo starling -d -p 22122
-    script/workling_starling_client start
+    script/workling_client start
 
 ## Configuring workling.yml
 
