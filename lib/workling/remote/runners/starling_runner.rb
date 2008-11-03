@@ -17,7 +17,6 @@ module Workling
     module Runners
       class StarlingRunner < Workling::Remote::Runners::Base
         cattr_accessor :routing
-        cattr_accessor :client
         
         def initialize
           StarlingRunner.client = Workling::Clients::MemcacheQueue.new

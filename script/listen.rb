@@ -11,7 +11,8 @@ puts '** Use CTRL-C to stop.'
 ActiveRecord::Base.logger = Workling::Base.logger
 ActionController::Base.logger = Workling::Base.logger
 
-poller = Workling::Starling::Poller.new(Workling::Routing::ClassAndMethodRouting.new)
+client = Workling::Remote.dispatcher.client
+poller = Workling::Starling::Poller.new(Workling::Routing::ClassAndMethodRouting.new, client)
 
 trap(:INT) { poller.stop; exit }
 

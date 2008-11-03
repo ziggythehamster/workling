@@ -11,6 +11,10 @@ module Workling
   module Clients
     class MemcacheQueue
       
+      # the class with which the connection is instantiated
+      cattr_accessor :memcache_client_class
+      @@memcache_client_class ||= ::MemCache
+      
       # the url with which the memcache client expects to reach starling
       attr_accessor :queueserver_urls
       
@@ -28,7 +32,7 @@ module Workling
       def initialize
         @queueserver_urls = Workling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
         options = [@queueserver_urls, Workling.config[:memcache_options]].compact
-        @connection = ::MemCache.new(*options)
+        @connection = MemcacheQueue.memcache_client_class.new(*options)
         
         raise_unless_connected!
       end
@@ -44,7 +48,7 @@ module Workling
           begin 
             @connection.stats
           rescue
-            raise Workling::QeueuserverNotFoundError.new
+            raise Workling::QueueserverNotFoundError.new
           end
         end
     end

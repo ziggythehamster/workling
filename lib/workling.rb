@@ -20,7 +20,7 @@ module Workling
   
   mattr_accessor :load_path
   @@load_path = File.expand_path(File.join(File.dirname(__FILE__), '../../../../app/workers')) 
-  VERSION = "0.3.1"
+  VERSION = "0.4.0"
   
   #
   # determine the runner to use if nothing is specifically set. workling will try to detect
@@ -108,14 +108,15 @@ module Workling
   #  returns a config hash. reads RAILS_ROOT/config/workling.yml
   #
   def self.config
-    config_path = File.join(RAILS_ROOT, 'config', 'workling.yml')
-    @@config ||=  YAML.load_file(config_path)[RAILS_ENV || 'development'].symbolize_keys
-    
-    # make sure the config file could be read correctly. 
-    raise ConfigurationError.new unless @@config
-    
-    @@config[:memcache_options].symbolize_keys! if @@config[:memcache_options]
-    @@config 
+    begin
+      config_path = File.join(RAILS_ROOT, 'config', 'workling.yml')
+      @@config ||=  YAML.load_file(config_path)[RAILS_ENV || 'development'].symbolize_keys
+      @@config[:memcache_options].symbolize_keys! if @@config[:memcache_options]
+      @@config 
+    rescue
+       # config files could not be read correctly
+      raise ConfigurationError.new
+    end
   end
   
   private

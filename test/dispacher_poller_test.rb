@@ -6,7 +6,7 @@ context "the dispatcher poller" do
    
     # the memoryreturnstore behaves exactly like memcache. 
     @connection = Workling::Return::Store::MemoryReturnStore.new
-    @client = Workling::Remote::Invokers::Poller.new(routing)
+    @client = Workling::Remote::Invokers::Poller.new(routing, Workling::Clients::MemcacheQueue)
   end
   
   specify "should invoke Util.echo with the arg 'hello' if the string 'hello' is set onto the queue utils__echo" do

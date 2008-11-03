@@ -12,7 +12,7 @@ module Workling
         # Seconds to wait while resetting connection
         cattr_accessor :reset_time 
 
-        def initialize(routing, client_class = Workling::Clients::MemcacheQueue)
+        def initialize(routing, client_class)
           Poller.sleep_time = Workling.config[:sleep_time] || 2
           Poller.reset_time = Workling.config[:reset_time] || 30
           

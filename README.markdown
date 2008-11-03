@@ -75,7 +75,7 @@ You'll see that this executes pretty much instantly. Run 'top' in another termin
 
 You cannot run your workers on a remote machine or cluster them with spawn. You also have no persistence: if you've fired of a lot of work and everything dies, there's no way of picking up where you left off. 
 
-# Using the Starling runner instead of Spawn
+# Using the Starling runner
 
 If you want cross machine jobs with low latency and a low memory overhead, you might want to look into using the Starling Runner. 
 
@@ -153,6 +153,21 @@ You might wonder what exactly starling does. Here's a little snippet you can pla
     11 starling = MemCache.new('localhost:22122')
     12 loop { puts starling.get('my_queue') }
     13
+    
+# Using RudeQueue
+
+RudeQueue is a Starling-like Queue that runs on top of your database and requires no extra processes. Use this if you don't need very fast job processing and want to avoid managing the extra process starling requires.
+
+Install the RudeQ plugin like this:
+
+    1 ./script/plugin install git://github.com/matthewrudy/rudeq.git
+    2 rake queue:setup
+    3 rake db:migrate
+    
+Configure Workling to use RudeQ. Add this to your environment:
+
+    Workling::Clients::MemcacheQueue.memcache_client_class = RudeQ::Client
+    Workling::Remote.dispatcher = Workling::Remote::Runners::StarlingRunner.new
 
 # Using BackgroundJob
 
