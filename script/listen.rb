@@ -3,6 +3,7 @@ puts '=> Loading Rails...'
 require File.dirname(__FILE__) + '/../../../../config/environment'
 require File.dirname(__FILE__) + '/../lib/workling/remote'
 require File.dirname(__FILE__) + '/../lib/workling/remote/invokers/poller'
+require File.dirname(__FILE__) + '/../lib/workling/remote/invokers/subscriber'
 require File.dirname(__FILE__) + '/../lib/workling/routing/class_and_method_routing'
 
 puts '** Rails loaded.'
@@ -13,7 +14,8 @@ ActiveRecord::Base.logger = Workling::Base.logger
 ActionController::Base.logger = Workling::Base.logger
 
 client = Workling::Remote.dispatcher.client
-poller = Workling::Remote::Invokers::Poller.new(Workling::Routing::ClassAndMethodRouting.new, client.class)
+invoker = Workling::Remote.invoker
+poller = invoker.new(Workling::Routing::ClassAndMethodRouting.new, client.class)
 
 trap(:INT) { poller.stop; exit }
 
