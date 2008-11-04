@@ -1,10 +1,12 @@
+require 'workling/remote/invokers/base'
+
 #
-#  Polls a client for work and dispatches jobs onto the correct workers.
+#  A polling Invoker. 
 # 
 module Workling
   module Remote
     module Invokers
-      class Poller
+      class Poller < Workling::Remote::Invokers::Base
       
         # Seconds to sleep before looping
         cattr_accessor :sleep_time
@@ -21,12 +23,8 @@ module Workling
           @workers = ThreadGroup.new
           @mutex = Mutex.new
         end      
-      
-        # returns the Workling::Base.logger
-        def logger; Workling::Base.logger; end
-    
-        def listen
-                
+          
+        def listen                
           # Allow concurrency for our tasks
           ActiveRecord::Base.allow_concurrency = true
 
@@ -124,7 +122,7 @@ module Workling
           n = 0
           for queue in @routing.queue_names_routing_class(clazz)
             begin
-              result = connection.get(queue)
+              result = connection.retrieve(queue)
               if result
                 n += 1
                 handler = @routing[queue]

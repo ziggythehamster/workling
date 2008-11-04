@@ -1,3 +1,5 @@
+require 'workling/clients/base'
+
 #
 #  This client can be used for all Queue Servers that speak Memcached, such as Starling. 
 #
@@ -9,7 +11,7 @@
 #
 module Workling
   module Clients
-    class MemcacheQueue
+    class MemcacheQueue < Workling::Clients::Base
       
       # the class with which the connection is instantiated
       cattr_accessor :memcache_client_class
@@ -29,27 +31,36 @@ module Workling
       #  the initialization code will raise an exception if memcache-client cannot connect 
       #  to queueserver.
       #
-      def initialize
+      def connect
         @queueserver_urls = Workling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
         options = [@queueserver_urls, Workling.config[:memcache_options]].compact
-        @connection = MemcacheQueue.memcache_client_class.new(*options)
+        self.connection = MemcacheQueue.memcache_client_class.new(*options)
         
         raise_unless_connected!
       end
       
-      # delegates directly through to the memcache connection. 
-      def method_missing(method, *args)
-        @connection.send(method, *args)
+      # closes the memcache connection
+      def close
+        self.connection.close
       end
-      
+
+      # implements the client job request and retrieval 
+      def request(key, value); set(key, value); end
+      def retrieve(key); get(key); end
+            
       private
         # make sure we can actually connect to queueserver on the given port
         def raise_unless_connected!
           begin 
-            @connection.stats
+            self.connection.stats
           rescue
             raise Workling::QueueserverNotFoundError.new
           end
+        end
+        
+        # delegates directly through to the memcache connection. 
+        def method_missing(method, *args)
+          self.connection.send(method, *args)
         end
     end
   end

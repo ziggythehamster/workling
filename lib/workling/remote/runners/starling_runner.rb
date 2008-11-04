@@ -20,6 +20,7 @@ module Workling
         
         def initialize
           StarlingRunner.client = Workling::Clients::MemcacheQueue.new
+          StarlingRunner.client.connect
           StarlingRunner.routing = Workling::Routing::ClassAndMethodRouting.new
         end
         

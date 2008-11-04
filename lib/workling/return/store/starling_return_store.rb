@@ -13,6 +13,7 @@ module Workling
         
         def initialize
           self.client = Workling::Clients::MemcacheQueue.new
+          self.client.connect
         end
         
         # set a value in the queue 'key'. 

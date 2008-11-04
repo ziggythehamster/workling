@@ -1,4 +1,9 @@
-Version 0.3.8
+Version 0.4.0, 04.11.08
+- more refactored clients and invokers. introduced clear base classes
+- support for 3 invoker strategies: poller, threaded poller, subscriber
+- amqp support
+
+Version 0.3.8, 03.11.08
 - full support for rudeq
 - refactored pollers. now now longer mainly about starling
 - refactored starling client, converted to generalized memcachequeue client.

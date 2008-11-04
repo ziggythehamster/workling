@@ -11,7 +11,7 @@ module Workling
         
         def initialize
           AmpqRunner.routing = Workling::Routing::ClassAndMethodRouting.new
-          AmpqRunner.client = Workling::Clients::AmqpClient.new
+          AmpqRunner.client = Workling::Clients::AmqpClient
         end
         
         # enqueues the job onto RabbitMQ or similar

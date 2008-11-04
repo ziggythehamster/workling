@@ -10,8 +10,10 @@ puts '** Rails loaded.'
 
 trap(:INT) { exit }
 
+client = Workling::Clients::MemcacheQueue.new
+  
 begin
-  client = Workling::Clients::MemcacheQueue.new
+  client.connect
   client.reset
   
   client.stats # do this so that connection is shown as established below. 
@@ -31,4 +33,5 @@ begin
   pp Thread.list
 ensure
   puts '** Exiting'
+  client.close
 end
