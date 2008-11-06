@@ -104,7 +104,7 @@ Here's what you need to get up and started in development mode. Look in config/w
 
 ## Configuring workling.yml
 
-Workling copies a file called workling.yml into your applications config directory. You can delete this file if you're not planning to use Starling. The config file tells Workling on which port Starling is listening. 
+Workling copies a file called workling.yml into your applications config directory. The config file tells Workling on which port Starling is listening. 
 
 Notice that the default production port is 15151. This means you'll need to start Starling with -p 15151 on production. 
 

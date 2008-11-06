@@ -1,6 +1,6 @@
 Version 0.4.0, 04.11.08
 - more refactored clients and invokers. introduced clear base classes
-- support for 3 invoker strategies: poller, threaded poller, subscriber
+- support for 3 invoker strategies: basic poller, threaded poller, eventmachine subscriber
 - amqp support
 
 Version 0.3.8, 03.11.08

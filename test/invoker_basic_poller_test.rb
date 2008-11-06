@@ -1,17 +1,11 @@
 require File.dirname(__FILE__) + '/test_helper.rb'
 
-context "the invoker 'poller'" do
+context "the invoker 'basic poller'" do
   setup do
     routing = Workling::Routing::ClassAndMethodRouting.new
-    @client = Workling::Clients::MemoryQueue.new
+    @client = Workling::Clients::MemoryQueueClient.new
     @client.connect
-    @invoker = Workling::Remote::Invokers::Poller.new(routing, @client.class)
-  end
-  
-  specify "should invoke Util.echo with the arg 'hello' if the string 'hello' is set onto the queue utils__echo" do
-    Util.any_instance.stubs(:echo).with("hello")
-    @client.request("utils__echo", "hello")
-    @invoker.dispatch!(@client, Util)
+    @invoker = Workling::Remote::Invokers::BasicPoller.new(routing, @client.class)
   end
   
   specify "should not explode when listen is called, and stop nicely when stop is called. " do
@@ -21,7 +15,9 @@ context "the invoker 'poller'" do
     
     client = mock()
     client.expects(:retrieve).at_least_once.returns("hi")
-    Workling::Clients::MemoryQueue.expects(:new).at_least_once.returns(client)
+    client.expects(:connect).at_least_once.returns(true)
+    client.expects(:close).at_least_once.returns(true)
+    Workling::Clients::MemoryQueueClient.expects(:new).at_least_once.returns(client)
     
     # Don't take longer than 10 seconds to shut this down. 
     Timeout::timeout(10) do

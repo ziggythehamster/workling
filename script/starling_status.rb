@@ -10,7 +10,7 @@ puts '** Rails loaded.'
 
 trap(:INT) { exit }
 
-client = Workling::Clients::MemcacheQueue.new
+client = Workling::Clients::MemcacheQueueClient.new
   
 begin
   client.connect

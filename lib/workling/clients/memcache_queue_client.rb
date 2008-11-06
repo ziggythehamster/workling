@@ -11,7 +11,7 @@ require 'workling/clients/base'
 #
 module Workling
   module Clients
-    class MemcacheQueue < Workling::Clients::Base
+    class MemcacheQueueClient < Workling::Clients::Base
       
       # the class with which the connection is instantiated
       cattr_accessor :memcache_client_class
@@ -34,7 +34,7 @@ module Workling
       def connect
         @queueserver_urls = Workling.config[:listens_on].split(',').map { |url| url ? url.strip : url }
         options = [@queueserver_urls, Workling.config[:memcache_options]].compact
-        self.connection = MemcacheQueue.memcache_client_class.new(*options)
+        self.connection = MemcacheQueueClient.memcache_client_class.new(*options)
         
         raise_unless_connected!
       end

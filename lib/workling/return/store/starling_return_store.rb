@@ -1,5 +1,5 @@
 require 'workling/return/store/base'
-require 'workling/clients/memcache_queue'
+require 'workling/clients/memcache_queue_client'
 
 #
 #  Recommended Return Store if you are using the Starling Runner. This
@@ -12,7 +12,7 @@ module Workling
         cattr_accessor :client
         
         def initialize
-          self.client = Workling::Clients::MemcacheQueue.new
+          self.client = Workling::Clients::MemcacheQueueClient.new
           self.client.connect
         end
         

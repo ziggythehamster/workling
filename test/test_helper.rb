@@ -24,8 +24,9 @@ Workling.try_load_a_memcache_client
 
 require "workling/discovery"
 require "workling/routing/class_and_method_routing"
-require "workling/remote/invokers/poller"
-require "workling/remote/invokers/subscriber"
+require "workling/remote/invokers/basic_poller"
+require "workling/remote/invokers/threaded_poller"
+require "workling/remote/invokers/eventmachine_subscriber"
 require "workling/remote"
 require "workling/remote/runners/not_remote_runner"
 require "workling/remote/runners/spawn_runner"
@@ -34,7 +35,7 @@ require "workling/remote/runners/backgroundjob_runner"
 require "workling/return/store/memory_return_store"
 require "workling/return/store/starling_return_store"
 require "mocks/client"
-require "clients/memory_client"
+require "clients/memory_queue_client"
 
 # worklings are in here.
 Workling.load_path ="#{ plugin_root }/test/workers"

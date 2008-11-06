@@ -19,7 +19,7 @@ module Workling
         cattr_accessor :routing
         
         def initialize
-          StarlingRunner.client = Workling::Clients::MemcacheQueue.new
+          StarlingRunner.client = Workling::Clients::MemcacheQueueClient.new
           StarlingRunner.client.connect
           StarlingRunner.routing = Workling::Routing::ClassAndMethodRouting.new
         end

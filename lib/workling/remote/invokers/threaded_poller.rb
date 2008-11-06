@@ -1,25 +1,23 @@
 require 'workling/remote/invokers/base'
 
 #
-#  A polling Invoker. 
+#  A threaded polling Invoker. 
+# 
+#  TODO: refactor this to make use of the base class. 
 # 
 module Workling
   module Remote
     module Invokers
-      class Poller < Workling::Remote::Invokers::Base
+      class ThreadedPoller < Workling::Remote::Invokers::Base
+        
+        cattr_accessor :sleep_time, :reset_time
       
-        # Seconds to sleep before looping
-        cattr_accessor :sleep_time
-      
-        # Seconds to wait while resetting connection
-        cattr_accessor :reset_time 
-
         def initialize(routing, client_class)
-          Poller.sleep_time = Workling.config[:sleep_time] || 2
-          Poller.reset_time = Workling.config[:reset_time] || 30
+          super
           
-          @routing = routing
-          @client_class = client_class
+          ThreadedPoller.sleep_time = Workling.config[:sleep_time] || 2
+          ThreadedPoller.reset_time = Workling.config[:reset_time] || 30
+          
           @workers = ThreadGroup.new
           @mutex = Mutex.new
         end      
