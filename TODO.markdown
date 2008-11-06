@@ -1,5 +1,6 @@
 # Todos for 0.5.0
 
+* refactor starling* to be memcache*. add aliased classes into deprecated.rb.
 * gemify
 * move all runner/invoker implementations out of workling
 * move backend discovery code out of workling
@@ -8,7 +9,6 @@
 # Todos for 1.0
 
 * add phusion daemon starter option so that workling_client doesn't need to be started manually. 
-* refactor starling* to be memcache*. add aliased classes into deprecated.rb.
 * merb support
 * test on jruby
 * more runners: sqs, beanstalkd

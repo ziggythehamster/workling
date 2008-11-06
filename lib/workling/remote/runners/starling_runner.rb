@@ -26,7 +26,7 @@ module Workling
         
         # enqueues the job onto Starling. 
         def run(clazz, method, options = {})
-          StarlingRunner.client.set(@@routing.queue_for(clazz, method), options)
+          StarlingRunner.client.request(@@routing.queue_for(clazz, method), options)
           
           return nil # empty.
           

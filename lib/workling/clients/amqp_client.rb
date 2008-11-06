@@ -8,7 +8,7 @@ module Workling
   module Clients
     class AmqpClient < Workling::Clients::Base
       
-      # connects to the queue server
+      # starts the client. 
       def connect; @amq = MQ.new; end
       
       # disconnect from the queue server

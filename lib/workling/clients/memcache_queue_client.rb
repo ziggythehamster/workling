@@ -41,7 +41,8 @@ module Workling
       
       # closes the memcache connection
       def close
-        self.connection.close
+        self.connection.flush_all
+        self.connection.reset
       end
 
       # implements the client job request and retrieval 

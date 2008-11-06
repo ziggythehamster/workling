@@ -11,12 +11,16 @@ module Workling
         
         def initialize
           AmpqRunner.routing = Workling::Routing::ClassAndMethodRouting.new
-          AmpqRunner.client = Workling::Clients::AmqpClient
+          AmpqRunner.client = Workling::Clients::AmqpClient.new
         end
         
         # enqueues the job onto RabbitMQ or similar
         def run(clazz, method, options = {})
-          AmqpClient.client.set(@@routing.queue_for(clazz, method), options)    
+          
+          # neet to connect in here as opposed to the constructor, since the EM loop is
+          # not available there. 
+          @connected ||= AmpqRunner.client.connect
+          AmpqRunner.client.request(@@routing.queue_for(clazz, method), options)    
           
           return nil
         end

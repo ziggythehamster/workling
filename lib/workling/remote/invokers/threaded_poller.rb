@@ -71,6 +71,7 @@ module Workling
                 
           # Setup connection to client (one per thread)
           connection = @client_class.new
+          connection.connect
           logger.info("** Starting client #{ connection.class } for #{clazz.name} queue")
         
           # Start dispatching those messages
