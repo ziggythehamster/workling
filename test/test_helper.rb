@@ -13,7 +13,7 @@ $:.unshift plugin_lib, plugin_test
 RAILS_ENV = "test"
 RAILS_ROOT = File.dirname(__FILE__) + "/.." # fake the rails root directory.
 RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
-RAILS_DEFAULT_LOGGER.level = Logger::ERROR
+RAILS_DEFAULT_LOGGER.level = Logger::WARN
 
 require "mocks/spawn"
 require "mocks/logger"

@@ -31,7 +31,7 @@ module Workling
             logger.debug("Discovered listener #{clazz}")
             @workers.add(Thread.new(clazz) { |c| clazz_listen(c) })
           end
-        
+          
           # Wait for all workers to complete
           @workers.list.each { |t| t.join }
 
@@ -44,11 +44,18 @@ module Workling
       
         # Check if all Worker threads have been started. 
         def started?
-          Workling::Discovery.discovered.size == @workers.list.size
+          logger.debug("checking if started... list size is #{ worker_threads }")
+          Workling::Discovery.discovered.size == worker_threads
+        end
+        
+        # number of worker threads running
+        def worker_threads
+          @workers.list.size
         end
       
         # Gracefully stop processing
         def stop
+          logger.info("stopping threaded poller...")
           sleep 1 until started? # give it a chance to start up before shutting down. 
           logger.info("Giving Listener Threads a chance to shut down. This may take a while... ")
           @workers.list.each { |w| w[:shutdown] = true }
@@ -73,7 +80,7 @@ module Workling
           connection = @client_class.new
           connection.connect
           logger.info("** Starting client #{ connection.class } for #{clazz.name} queue")
-        
+     
           # Start dispatching those messages
           while (!Thread.current[:shutdown]) do
             begin
