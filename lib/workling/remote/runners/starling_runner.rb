@@ -20,12 +20,15 @@ module Workling
         
         def initialize
           StarlingRunner.client = Workling::Clients::MemcacheQueueClient.new
-          StarlingRunner.client.connect
           StarlingRunner.routing = Workling::Routing::ClassAndMethodRouting.new
         end
         
         # enqueues the job onto Starling. 
         def run(clazz, method, options = {})
+          
+          # connecting in here avoids exceptions when running rake tasks etc
+          @connected ||= StarlingRunner.client.connect
+          
           StarlingRunner.client.request(@@routing.queue_for(clazz, method), options)
           
           return nil # empty.

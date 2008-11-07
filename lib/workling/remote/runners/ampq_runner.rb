@@ -20,6 +20,7 @@ module Workling
           # neet to connect in here as opposed to the constructor, since the EM loop is
           # not available there. 
           @connected ||= AmpqRunner.client.connect
+          
           AmpqRunner.client.request(@@routing.queue_for(clazz, method), options)    
           
           return nil

@@ -11,8 +11,9 @@ module Workling
       # starts the client. 
       def connect; @amq = MQ.new; end
       
-      # disconnect from the queue server
-      def close; @amq.close; end
+      # no need for explicit closing. when the event loop
+      # terminates, the connection is closed anyway. 
+      def close; true; end
       
       # subscribe to a queue
       def subscribe(key)
