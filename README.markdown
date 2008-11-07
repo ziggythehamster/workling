@@ -154,6 +154,23 @@ You might wonder what exactly starling does. Here's a little snippet you can pla
     12 loop { puts starling.get('my_queue') }
     13
     
+# Using RabbitMQ or any Queue Server that supports AMQP
+
+RabbitMQ is a reliable, high performance queue server written in erlang. If you're doing high volume messaging and need a high degree of reliability, you should definitely consider using RabbitMQ over Starling. 
+
+If you're on OSX, you can get started with RabbitMQ by following the installation instructions [here](http://playtype.net/past/2008/10/9/installing_rabbitmq_on_osx/). To get an idea of how to directly connect to RabbitMQ using ruby, have a look at [this article](http://playtype.net/past/2008/10/10/kickass_queuing_over_ruby_using_amqp).
+
+Once you've installed RabbitMQ, configure your application to use it by adding this: 
+
+    Workling::Remote.invoker = Workling::Remote::Invokers::EventmachineSubscriber 
+    Workling::Remote.dispatcher = Workling::Remote::Runners::AmpqRunner.new
+    
+Then start the workling Client: 
+
+    1 ./script/workling_client start
+
+You're good. 
+
 # Using RudeQueue
 
 RudeQueue is a Starling-like Queue that runs on top of your database and requires no extra processes. Use this if you don't need very fast job processing and want to avoid managing the extra process starling requires.
