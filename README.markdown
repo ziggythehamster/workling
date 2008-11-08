@@ -162,8 +162,9 @@ If you're on OSX, you can get started with RabbitMQ by following the installatio
 
 Once you've installed RabbitMQ, configure your application to use it by adding this: 
 
-    Workling::Remote.invoker = Workling::Remote::Invokers::EventmachineSubscriber 
-    Workling::Remote.dispatcher = Workling::Remote::Runners::AmpqRunner.new
+    Workling::Remote.invoker = Workling::Remote::Invokers::EventmachineSubscriber
+    Workling::Remote.dispatcher = Workling::Remote::Runners::ClientRunner.new
+    Workling::Remote.dispatcher.client = Workling::Clients::AmqpClient.new
     
 Then start the workling Client: 
 
