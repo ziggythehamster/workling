@@ -1,3 +1,7 @@
+Version 0.4.1 08.11.08
+- added a generic client runner. deprecated starling_runner since it is now redundant
+- moved connection exception handling code into MemcacheQueueClient and out of pollers
+
 Version 0.4.0, 04.11.08
 - more refactored clients and invokers. introduced clear base classes
 - support for 3 invoker strategies: basic poller, threaded poller, eventmachine subscriber

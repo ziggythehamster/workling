@@ -112,8 +112,8 @@ module Workling
             
               # If there is a memcache error, hang for a bit to give it a chance to fire up again
               # and reset the connection.
-              rescue MemCache::MemCacheError
-                logger.warn("Listener thread #{clazz.name} failed to connect to memcache. Resetting connection.")
+              rescue Workling::WorklingConnectionError
+                logger.warn("Listener thread #{clazz.name} failed to connect. Resetting connection.")
                 sleep(self.class.reset_time)
                 connection.reset
             end

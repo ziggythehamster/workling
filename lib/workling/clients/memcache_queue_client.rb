@@ -46,8 +46,18 @@ module Workling
       end
 
       # implements the client job request and retrieval 
-      def request(key, value); set(key, value); end
-      def retrieve(key); get(key); end
+      def request(key, value)
+        set(key, value)
+      end
+      
+      def retrieve(key)
+        begin
+          get(key)
+        rescue MemCache::MemCacheError => e
+          # failed to enqueue, raise a workling error so that it propagates upwards
+          raise Workling::WorklingError.new("#{e.class.to_s} - #{e.message}")        
+        end
+      end
             
       private
         # make sure we can actually connect to queueserver on the given port
@@ -61,7 +71,11 @@ module Workling
         
         # delegates directly through to the memcache connection. 
         def method_missing(method, *args)
-          self.connection.send(method, *args)
+          begin
+            self.connection.send(method, *args)
+          rescue MemCache::MemCacheError => e
+            raise Workling::WorklingConnectionError.new("#{e.class.to_s} - #{e.message}")        
+          end
         end
     end
   end

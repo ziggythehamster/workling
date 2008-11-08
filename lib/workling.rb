@@ -4,6 +4,7 @@
 module Workling
   class WorklingError < StandardError; end
   class WorklingNotFoundError < WorklingError; end
+  class WorklingConnectionError < WorklingError; end
   class QueueserverNotFoundError < WorklingError
     def initialize
       super "config/workling.yml configured to connect to queue server on #{ Workling.config[:listens_on] } for this environment. could not connect to queue server on this host:port. for starling users: pass starling the port with -p flag when starting it. If you don't want to use Starling, then explicitly set Workling::Remote.dispatcher (see README for an example)"
@@ -20,7 +21,7 @@ module Workling
   
   mattr_accessor :load_path
   @@load_path = File.expand_path(File.join(File.dirname(__FILE__), '../../../../app/workers')) 
-  VERSION = "0.4.0"
+  VERSION = "0.4.1"
   
   #
   # determine the runner to use if nothing is specifically set. workling will try to detect
