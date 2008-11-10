@@ -21,7 +21,7 @@ module Workling
   
   mattr_accessor :load_path
   @@load_path = File.expand_path(File.join(File.dirname(__FILE__), '../../../../app/workers')) 
-  VERSION = "0.4.1"
+  VERSION = "0.4.2"
   
   #
   # determine the runner to use if nothing is specifically set. workling will try to detect
@@ -102,6 +102,18 @@ module Workling
       rescue Gem::LoadError
         Workling::Base.logger.info "WORKLING: couldn't find a memcache client - you need one for the starling runner. "
       end
+    end
+  end
+  
+  # attempts to load amqp and writes out descriptive error message if not present
+  def self.try_load_an_amqp_client
+    begin
+      require 'mq'
+    rescue Exception => e
+      raise WorklingError.new(
+        "WORKLING: couldn't find the ruby amqp client - you need it for the amqp runner. " \
+        "Install from github: gem sources -a http://gems.github.com/ && sudo gem install tmm1-amqp "
+      )
     end
   end
   

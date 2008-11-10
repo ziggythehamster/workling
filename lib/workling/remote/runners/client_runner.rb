@@ -1,6 +1,5 @@
 require 'workling/remote/runners/base'
 require 'workling/clients/memcache_queue_client'
-require 'workling/clients/amqp_client'
 
 #
 #  Runs Jobs over a Client. The client should be a subclass of Workling::Client::Base. 

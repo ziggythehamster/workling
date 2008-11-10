@@ -1,3 +1,8 @@
+Version 0.4.2, 10.11.08
+- added information about invokers and clients to the readme
+- fixed dependence on amqp library
+- nicer error messages with amqp / rabbitmq
+
 Version 0.4.1 08.11.08
 - added a generic client runner. deprecated starling_runner since it is now redundant
 - moved connection exception handling code into MemcacheQueueClient and out of pollers
