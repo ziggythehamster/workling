@@ -193,8 +193,8 @@ Install the RudeQ plugin like this:
     
 Configure Workling to use RudeQ. Add this to your environment:
 
-    Workling::Clients::MemcacheQueue.memcache_client_class = RudeQ::Client
-    Workling::Remote.dispatcher = Workling::Remote::Runners::StarlingRunner.new
+    Workling::Clients::MemcacheQueueClient.memcache_client_class = RudeQ::Client
+    Workling::Remote.dispatcher = Workling::Remote::Runners::ClientRunner.new
     
 Now start the Workling Client: 
 
