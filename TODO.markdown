@@ -1,5 +1,6 @@
 # Todos for 0.5.0
 
+* add reloading of workers if Rails.reload?
 * refactor starling* to be memcache*. add aliased classes into deprecated.rb.
 * gemify
 * move all runner/invoker implementations out of workling
