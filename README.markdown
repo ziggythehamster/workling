@@ -60,7 +60,7 @@ Workling does log all exceptions that propagate out of the worker methods.
 
 ## Logging with Workling
 
-`RAILS_DEFAULT_LOGGER` is available in all workers. Workers also have a logger method which returns the default logger, so you can log like this: 
+`Rails.logger` is available in all workers. Workers also have a logger method which returns the default logger, so you can log like this: 
 
     logger.info("about to moo.")
 

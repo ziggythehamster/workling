@@ -6,14 +6,19 @@ require 'rubygems'
 require 'active_support'
 require 'active_record'
 require 'test/spec'
+require 'logger'
 require 'mocha'
 
 $:.unshift plugin_lib, plugin_test
 
-RAILS_ENV = "test"
-RAILS_ROOT = File.dirname(__FILE__) + "/.." # fake the rails root directory.
-RAILS_DEFAULT_LOGGER = Logger.new(STDOUT)
-RAILS_DEFAULT_LOGGER.level = Logger::WARN
+module Rails
+  mattr_accessor :env, :root, :logger
+end
+
+Rails.env = "test"
+Rails.root = File.dirname(__FILE__) + "/.." # fake the rails root directory.
+Rails.logger = Logger.new(STDOUT)
+Rails.logger.level = Logger::WARN
 
 require "mocks/spawn"
 require "mocks/logger"
