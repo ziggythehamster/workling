@@ -103,11 +103,7 @@ module Workling
 
               # Dispatch and process the messages
               n = dispatch!(connection, clazz)
-              if n > 0
-               logger.debug("Listener thread #{clazz.name} processed #{n.to_s} queue items") 
-                # exit after finishing the task
-                exit(0) 
-              end
+              logger.debug("Listener thread #{clazz.name} processed #{n.to_s} queue items") if n > 0
 
               sleep(self.class.sleep_time) unless n > 0
             
