@@ -1,7 +1,12 @@
 require 'workling/return/store/base'
 
 #
-#  Kai De Sutter Stores directly into db
+#  How to use:
+#  1. Create a migration that has two fields: key (string) and value (text). The table is return_stores.
+#  2. Create a model called ReturnStore. Add "serialize :value" to the model and validate the presence of key.
+#  3. You're done.
+#
+#  This really should have been called ActiveRecordReturnStore though.
 #
 module Workling
   module Return
