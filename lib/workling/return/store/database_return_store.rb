@@ -26,6 +26,7 @@ module Workling
 
         def get(key)
           store = ReturnStore.find_by_key(key)
+          return nil if store.nil?
           value = store.value
           return value
         end
