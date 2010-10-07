@@ -27,7 +27,6 @@ module Workling
         def get(key)
           store = ReturnStore.find_by_key(key)
           value = store.value
-          store.destroy
           return value
         end
       end
